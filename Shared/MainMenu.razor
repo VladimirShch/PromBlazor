@@ -1,0 +1,21 @@
+﻿@using Web_Prom.Core.Blazor.Core.Entities.Wells
+@using Web_Prom.Core.Blazor.ApplicationLayer.Credentials
+@using Geolog.Contracts;
+
+<select Size="15">
+    @foreach(WellShort well in Wells)
+    {
+        <option value="@well.Id">@well.Name</option>
+    }
+</select>
+
+@code {
+    [Inject]
+    public IWellShortRepository WellShortRepository { get; set; }
+    public IEnumerable<WellShort> Wells { get; set; } = new List<WellShort>();
+    protected override async Task OnInitializedAsync()
+    {
+        var sprav = Web_Prom.Lib.GeologClient.Default.Get<ISprav>();
+        Wells = await WellShortRepository.GetAll("100000001");
+    }
+}
